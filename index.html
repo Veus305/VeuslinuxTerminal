@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Birth & Conception Story</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-image: url('https://images.unsplash.com/photo-1617791160505-6f00504e3519?auto=format&fit=crop&q=80&w=2000');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #f0f0f0;
+            min-height: 100vh;
+            position: relative;
+        }
+        body::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(10, 10, 30, 0.92) 0%, rgba(20, 20, 60, 0.88) 100%);
+            z-index: -1;
+        }
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 30px;
+            background: rgba(30, 30, 60, 0.35);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+        }
+        h1 {
+            text-align: center;
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, #a78bfa, #7dd3fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #a0a0ff;
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+        }
+        .input-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 35px;
+        }
+        .field {
+            min-width: 220px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #c0c0ff;
+        }
+        select, input[type="date"], input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 10px;
+            background: rgba(40,40,80,0.6);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        select:focus, input:focus {
+            outline: none;
+            border-color: #a78bfa;
+            box-shadow: 0 0 0 3px rgba(167,139,250,0.25);
+            background: rgba(50,50,90,0.7);
+        }
+        button {
+            display: block;
+            margin: 0 auto 30px;
+            padding: 14px 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            background: linear-gradient(90deg, #7c3aed, #3b82f6);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 6px 20px rgba(124,58,237,0.4);
+        }
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(124,58,237,0.55);
+        }
+        .results {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        .card {
+            background: rgba(40,40,80,0.45);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s ease;
+        }
+        .card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .card.birth {
+            animation: slideFromLeft 1.2s ease-out forwards;
+        }
+        .card.conception {
+            animation: slideFromRight 1.2s ease-out forwards 0.3s;
+        }
+        @keyframes slideFromLeft {
+            from { opacity: 0; transform: translateX(-80px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes slideFromRight {
+            from { opacity: 0; transform: translateX(80px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+        .card h2 {
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+            color: #c4b5fd;
+            text-align: center;
+            position: relative;
+        }
+        .card h2::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #a78bfa, transparent);
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 14px 0;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .info-row:last-child {
+            border-bottom: none;
+        }
+        .label {
+            color: #b0b0ff;
+            font-weight: 500;
+        }
+        .value {
+            color: white;
+            font-weight: 400;
+        }
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.9rem;
+            color: #a0a0ff;
+        }
+        footer a {
+            color: #c4b5fd;
+            text-decoration: none;
+        }
+        @media (max-width: 900px) {
+            .results {
+                grid-template-columns: 1fr;
+            }
+            .card.conception {
+                animation-delay: 0s;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Your Cosmic Timeline</h1>
+        <p class="subtitle">Discover the world on the day you were born and conceived</p>
+
+        <div class="input-group">
+            <div class="field">
+                <label for="birthYear">Year of Birth</label>
+                <select id="birthYear"></select>
+            </div>
+            <div class="field">
+                <label for="birthMonth">Month</label>
+                <select id="birthMonth">
+                    <option value="">Select month</option>
+                    <option value="0">January</option>
+                    <option value="1">February</option>
+                    <option value="2">March</option>
+                    <option value="3">April</option>
+                    <option value="4">May</option>
+                    <option value="5">June</option>
+                    <option value="6">July</option>
+                    <option value="7">August</option>
+                    <option value="8">September</option>
+                    <option value="9">October</option>
+                    <option value="10">November</option>
+                    <option value="11">December</option>
+                </select>
+            </div>
+            <div class="field">
+                <label for="birthDay">Day</label>
+                <input type="number" id="birthDay" min="1" max="31" placeholder="1–31">
+            </div>
+            <div class="field">
+                <label for="tmdbToken">TMDB API Token (Required for Movies/Series)</label>
+                <input type="text" id="tmdbToken" placeholder="Enter your TMDB Read Access Token">
+            </div>
+        </div>
+
+        <button id="reveal">Reveal My Story</button>
+
+        <div class="results" id="results">
+            <div class="card birth" id="birthCard">
+                <h2>You Were Born</h2>
+                <div class="info-row"><span class="label">Date:</span> <span class="value" id="birth-full-date"></span></div>
+                <div class="info-row"><span class="label">Day of week:</span> <span class="value" id="birth-dayname"></span></div>
+                <div class="info-row"><span class="label">Approximate time:</span> <span class="value" id="birth-time"></span></div>
+                <div class="info-row"><span class="label">Vibe / Mood:</span> <span class="value" id="birth-mood"></span></div>
+                <div class="info-row"><span class="label">Major world event:</span> <span class="value" id="birth-event"></span></div>
+                <div class="info-row"><span class="label">Notable death that day:</span> <span class="value" id="birth-death"></span></div>
+                <div class="info-row"><span class="label">Notable film / series release that month:</span> <span class="value" id="birth-movie"></span></div>
+                <div class="info-row"><span class="label">Festive season / holiday vibe:</span> <span class="value" id="birth-festival"></span></div>
+            </div>
+
+            <div class="card conception" id="conceptionCard">
+                <h2>You Were Conceived</h2>
+                <div class="info-row"><span class="label">Estimated date:</span> <span class="value" id="conception-full-date"></span></div>
+                <div class="info-row"><span class="label">Day of week:</span> <span class="value" id="conception-dayname"></span></div>
+                <div class="info-row"><span class="label">Approximate time:</span> <span class="value" id="conception-time"></span></div>
+                <div class="info-row"><span class="label">Vibe / Mood:</span> <span class="value" id="conception-mood"></span></div>
+                <div class="info-row"><span class="label">Major world event:</span> <span class="value" id="conception-event"></span></div>
+                <div class="info-row"><span class="label">Notable death that day:</span> <span class="value" id="conception-death"></span></div>
+                <div class="info-row"><span class="label">Notable film / series release that month:</span> <span class="value" id="conception-movie"></span></div>
+                <div class="info-row"><span class="label">Festive season / holiday vibe:</span> <span class="value" id="conception-festival"></span></div>
+            </div>
+        </div>
+    </div>
+    <footer>Powered by <a href="https://www.themoviedb.org/" target="_blank">TMDB</a> for movie/TV data and <a href="https://api.wikimedia.org/" target="_blank">Wikimedia API</a> for historical events</footer>
+
+    <script>
+        // Populate years (1900–current year)
+        const currentYear = new Date().getFullYear();
+        const yearSelect = document.getElementById('birthYear');
+        for (let y = currentYear; y >= 1900; y--) {
+            const opt = document.createElement('option');
+            opt.value = y;
+            opt.textContent = y;
+            yearSelect.appendChild(opt);
+        }
+
+        const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+        const festivals = [
+            "New Year's & Winter festivities", "Valentine's & love season", "Spring awakening & Holi/Easter vibes",
+            "Earth Day & spring renewal", "Cinco de Mayo & summer beginning", "Pride Month & midsummer energy",
+            "Independence celebrations & beach season", "Back-to-school & harvest vibes", "Labor Day & autumn start",
+            "Halloween & spooky season", "Thanksgiving & gratitude", "Christmas & winter holidays"
+        ];
+
+        const moods = [
+            "Magical", "Passionate", "Hopeful", "Adventurous", "Romantic", "Mysterious", "Triumphant",
+            "Reflective", "Euphoric", "Serene", "Electric", "Dreamy", "Rebellious", "Nostalgic"
+        ];
+
+        function randomTime() {
+            const h = String(Math.floor(Math.random() * 24)).padStart(2,'0');
+            const m = String(Math.floor(Math.random() * 60)).padStart(2,'0');
+            return `${h}:${m}`;
+        }
+
+        function randomMood() {
+            return moods[Math.floor(Math.random() * moods.length)];
+        }
+
+        async function getWikimediaData(month, day) {
+            const mm = String(month + 1).padStart(2, '0');
+            const dd = String(day).padStart(2, '0');
+            try {
+                const res = await fetch(`https://api.wikimedia.org/feed/v1/wikipedia/en/onthisday/all/${mm}/${dd}`);
+                const data = await res.json();
+                const event = data.selected?.[0]?.text || data.events?.[0]?.text || "No major event recorded for this date";
+                let death = "No notable deaths recorded for this date";
+                if (data.deaths && data.deaths.length > 0) {
+                    const randomIndex = Math.floor(Math.random() * data.deaths.length);
+                    death = data.deaths[randomIndex].text;
+                }
+                return { event, death };
+            } catch (e) {
+                return { event: "Could not load historical event", death: "Could not load notable death" };
+            }
+        }
+
+        async function fetchTMDb(endpoint, token, params) {
+            const url = new URL(`https://api.themoviedb.org/3/${endpoint}`);
+            Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+            const res = await fetch(url, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            if (!res.ok) {
+                if (res.status === 401) return { error: "Invalid TMDB token - please check and regenerate if needed" };
+                if (res.status === 429) return { error: "TMDB rate limit exceeded - try again in a few seconds" };
+                return { error: `TMDB error: ${res.status} - ${await res.text()}` };
+            }
+            return await res.json();
+        }
+
+        async function getTMDbMedia(token, year, month) {
+            if (!token) return "TMDB token required";
+            const monthStr = String(month + 1).padStart(2, '0');
+            const firstDay = `${year}-${monthStr}-01`;
+            const lastDay = new Date(year, month + 1, 0).toISOString().slice(0, 10);
+
+            const params = {
+                'include_adult': false,
+                'include_video': false,
+                'language': 'en-US',
+                'page': 1,
+                'primary_release_date.gte': firstDay,
+                'primary_release_date.lte': lastDay,
+                'sort_by': 'vote_average.desc',
+                'vote_count.gte': 50  // Lowered from 100 for more reliability on older dates
+            };
+
+            try {
+                // Fetch movies
+                let movieData = await fetchTMDb('discover/movie', token, params);
+                if (movieData.error) return movieData.error;
+
+                // Fetch TV
+                params['first_air_date.gte'] = params['primary_release_date.gte'];
+                params['first_air_date.lte'] = params['primary_release_date.lte'];
+                delete params['primary_release_date.gte'];
+                delete params['primary_release_date.lte'];
+                let tvData = await fetchTMDb('discover/tv', token, params);
+                if (tvData.error) return tvData.error;
+
+                // Combine top 5 from each
+                let combined = [...(movieData.results || []).slice(0, 5), ...(tvData.results || []).slice(0, 5)];
+
+                // If no results, retry with lower vote threshold
+                if (combined.length === 0) {
+                    params['vote_count.gte'] = 10;
+                    movieData = await fetchTMDb('discover/movie', token, params);
+                    if (movieData.error) return movieData.error;
+                    tvData = await fetchTMDb('discover/tv', token, params);
+                    if (tvData.error) return tvData.error;
+                    combined = [...(movieData.results || []).slice(0, 5), ...(tvData.results || []).slice(0, 5)];
+                }
+
+                // If still no results, try without vote count
+                if (combined.length === 0) {
+                    delete params['vote_count.gte'];
+                    movieData = await fetchTMDb('discover/movie', token, params);
+                    if (movieData.error) return movieData.error;
+                    tvData = await fetchTMDb('discover/tv', token, params);
+                    if (tvData.error) return tvData.error;
+                    combined = [...(movieData.results || []).slice(0, 5), ...(tvData.results || []).slice(0, 5)];
+                }
+
+                if (combined.length === 0) return "No notable releases found that month - try a more recent year";
+
+                const randomPick = combined[Math.floor(Math.random() * combined.length)];
+                const type = randomPick.title ? 'Movie' : 'TV Series';
+                const name = randomPick.title || randomPick.name;
+                return `${name} (${type}, rated ${randomPick.vote_average}/10)`;
+            } catch (e) {
+                return "Error fetching from TMDB – check your network or token";
+            }
+        }
+
+        document.getElementById('reveal').addEventListener('click', async () => {
+            const year  = parseInt(document.getElementById('birthYear').value);
+            const month = parseInt(document.getElementById('birthMonth').value);
+            const day   = parseInt(document.getElementById('birthDay').value);
+            const tmdbToken = document.getElementById('tmdbToken').value.trim();
+
+            if (!year || isNaN(month) || !day || day < 1 || day > 31) {
+                alert("Please fill in a valid birth date");
+                return;
+            }
+
+            if (!tmdbToken) {
+                alert("Please enter your TMDB API Read Access Token");
+                return;
+            }
+
+            const birthDate = new Date(year, month, day);
+            if (isNaN(birthDate.getTime())) {
+                alert("Invalid date");
+                return;
+            }
+
+            // Conception ≈ 280 days (40 weeks) before birth
+            const conceptionDate = new Date(birthDate.getTime() - 280 * 24 * 60 * 60 * 1000);
+
+            // Birth
+            const birthData = await getWikimediaData(month, day);
+            document.getElementById('birth-full-date').textContent = birthDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+            document.getElementById('birth-dayname').textContent = birthDate.toLocaleDateString('en-US', { weekday: 'long' });
+            document.getElementById('birth-time').textContent = randomTime();
+            document.getElementById('birth-mood').textContent = randomMood();
+            document.getElementById('birth-festival').textContent = festivals[month];
+            document.getElementById('birth-event').textContent = birthData.event;
+            document.getElementById('birth-death').textContent = birthData.death;
+            document.getElementById('birth-movie').textContent = await getTMDbMedia(tmdbToken, year, month);
+
+            // Conception
+            const cYear  = conceptionDate.getFullYear();
+            const cMonth = conceptionDate.getMonth();
+            const cDay = conceptionDate.getDate();
+            const conceptionData = await getWikimediaData(cMonth, cDay);
+            document.getElementById('conception-full-date').textContent = conceptionDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+            document.getElementById('conception-dayname').textContent = conceptionDate.toLocaleDateString('en-US', { weekday: 'long' });
+            document.getElementById('conception-time').textContent = randomTime();
+            document.getElementById('conception-mood').textContent = randomMood();
+            document.getElementById('conception-festival').textContent = festivals[cMonth];
+            document.getElementById('conception-event').textContent = conceptionData.event;
+            document.getElementById('conception-death').textContent = conceptionData.death;
+            document.getElementById('conception-movie').textContent = await getTMDbMedia(tmdbToken, cYear, cMonth);
+
+            // Show cards with animation
+            document.getElementById('results').style.display = 'grid';
+            setTimeout(() => {
+                document.getElementById('birthCard').classList.add('visible');
+                document.getElementById('conceptionCard').classList.add('visible');
+            }, 100);
+        });
+    </script>
+</body>
+</html>
